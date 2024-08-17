@@ -1,14 +1,9 @@
 pipeline {
     agent any
-
+    environment {
+        NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
+    }
     stages {
-         stage('Setup Permissions') {
-            steps {
-                sh '''
-                    sudo chown -R $(id -u):$(id -g) /Users/saad/.npm
-                '''
-            }
-        }
         stage('Build') {
             agent {
                 docker {
