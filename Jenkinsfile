@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+         stage('Setup Permissions') {
+            steps {
+                sh '''
+                    sudo chown -R $(id -u):$(id -g) /Users/saad/.npm
+                '''
+            }
+        }
         stage('Build') {
             agent {
                 docker {
@@ -14,7 +21,6 @@ pipeline {
                     ls -la
                     node --version
                     npm --version
-                    chown -R 501:20 "/.npm"
                     npm ci
                     npm run build
                     ls -la
