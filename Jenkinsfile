@@ -81,7 +81,6 @@ pipeline {
             }
             steps {
                 sh '''
-                    chown -R $(whoami) ${WORKSPACE}
                     npm install netlify-cli --unsafe-perm=true
                     node_modules/.bin/netlify --version
                     echo "Deploying to production, Site ID: $NETLIFY_SITE_ID"
