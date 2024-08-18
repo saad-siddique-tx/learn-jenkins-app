@@ -3,6 +3,7 @@ pipeline {
     environment {
         NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
         NETLIFY_SITE_ID = ''
+        SHARP_IGNORE_GLOBAL_LIBVIPS = "true"
     }
     stages {
         stage('Build') {
