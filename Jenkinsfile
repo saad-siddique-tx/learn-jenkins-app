@@ -82,6 +82,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    npm install sharp --unsafe-perm=true
                     npm install netlify-cli --unsafe-perm=true
                     node_modules/.bin/netlify --version
                     echo "Deploying to production, Site ID: $NETLIFY_SITE_ID"
