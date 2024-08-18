@@ -81,6 +81,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    rm -rf node_modules package-lock.json
                     npm install sharp --unsafe-perm=true --no-bin-links
                     npm install netlify-cli --unsafe-perm=true --no-bin-links
                     node_modules/.bin/netlify --version
