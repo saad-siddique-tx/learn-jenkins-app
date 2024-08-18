@@ -3,13 +3,12 @@ pipeline {
     environment {
         NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
         NETLIFY_SITE_ID = ''
-        SHARP_IGNORE_GLOBAL_LIBVIPS = "true"
     }
     stages {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-bullseye'
+                    image 'node:18--bullseye'
                     reuseNode true
                 }
             }
@@ -30,7 +29,7 @@ pipeline {
                 stage('Unit tests') {
                     agent {
                         docker {
-                            image 'node:18-bullseye'
+                            image 'node:18--bullseye'
                             reuseNode true
                         }
                     }
@@ -76,14 +75,14 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:18--bullseye'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    npm install sharp --unsafe-perm=true
-                    npm install netlify-cli --unsafe-perm=true
+                    npm install sharp --unsafe-perm=true --no-bin-links
+                    npm install netlify-cli --unsafe-perm=true --no-bin-links
                     node_modules/.bin/netlify --version
                     echo "Deploying to production, Site ID: $NETLIFY_SITE_ID"
                 '''
