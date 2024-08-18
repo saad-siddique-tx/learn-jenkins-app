@@ -2,13 +2,14 @@ pipeline {
     agent any
     environment {
         NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
-        NETLIFY_SITE_ID = ''
+        NETLIFY_SITE_ID = '3ca92891-9f21-497a-afd9-5bae3377835b'
+        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
     stages {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-bullseye'
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
@@ -29,7 +30,7 @@ pipeline {
                 stage('Unit tests') {
                     agent {
                         docker {
-                            image 'node:18-bullseye'
+                            image 'node:18-alpine'
                             reuseNode true
                         }
                     }
@@ -75,17 +76,17 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'node:18-bullseye'
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    rm -rf node_modules package-lock.json
-                    npm install sharp --unsafe-perm=true --no-bin-links
-                    npm install netlify-cli --unsafe-perm=true --no-bin-links
+                    npm install netlify-cli --unsafe-perm=true
                     node_modules/.bin/netlify --version
                     echo "Deploying to production, Site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
                 '''
             }
         }
