@@ -89,11 +89,13 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build
                 '''
             }
-             post {
-                        always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report-staging', reportFiles: 'index.html', reportName: 'Playwright HTML Report staging', reportTitles: '', useWrapperFileDirectly: true])
-                        }
-                    }
+        }
+        stage('Approval') {
+            steps {
+                timeout(time: 15, unit: 'HOURS'){
+                  input message: 'Do you wish to Deploy to production?', ok: 'Yes, I am sure!'
+                }
+            }
         }
         stage('Deploy production') {
             agent {
@@ -111,6 +113,11 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod
                 '''
             }
+            post {
+                always {
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report-staging', reportFiles: 'index.html', reportName: 'Playwright HTML Report staging', reportTitles: '', useWrapperFileDirectly: true])
+                    }
+                }
         }
     }
 }
